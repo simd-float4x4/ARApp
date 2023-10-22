@@ -11,7 +11,7 @@ import ARKit
 
 class ViewController: UIViewController, ARSCNViewDelegate {
 
-    @IBOutlet var sceneView: ARSCNView!
+    let sceneView = ARSCNView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,6 +24,17 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Set the scene to the view
         sceneView.scene = scene
+
+        sceneView.translatesAutoresizingMaskIntoConstraints = false
+
+        view.addSubview(sceneView)
+        // ARSCNViewを画面いっぱいに広げる制約を設定
+        NSLayoutConstraint.activate([
+            sceneView.topAnchor.constraint(equalTo: view.topAnchor),
+            sceneView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            sceneView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            sceneView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -31,6 +42,27 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Create a session configuration
         let configuration = ARWorldTrackingConfiguration()
+
+        let config: [debugOptions : Bool]  =
+                            [.showBoundingBoxes : true,
+                             .showWireframe : false,
+                             .renderAsWireframe : false,
+                             .showSkeletons : false,
+                             .showCameras : false,
+                             .showConstraints : false,
+                             .showCreases: false,
+                             .showLightInfluences : false,
+                             .showLightExtents : false,
+                             .showPhysicsFields : false,
+                             .showPhysicsShapes : false,
+                             .showFeaturePoints : false,
+                             .showWorldOrigin : true,
+                             .showStatistics : true,
+                             .autoEnablesDefaultLighting : true,
+                             .isJitteringEnabled : false]
+
+        sceneView.configureDebugOptions(debugOptionsArray: config)
+        print(sceneView.debugOptions)
 
         // Run the view's session
         sceneView.session.run(configuration)
